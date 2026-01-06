@@ -1,11 +1,13 @@
 import difflib
 import re
 from core.skills import SkillSet, SKILL_MAP
+from core.reflection import ReflectionEngine
 
 class DecisionEngine:
     def __init__(self, memory):
         self.memory = memory
         self.skills = SkillSet()
+        self.reflection = ReflectionEngine(memory)
         # Contexte temporaire (mémoire courte durée)
         self.context = {}
 
@@ -28,14 +30,21 @@ class DecisionEngine:
                 return "Je ne connais pas encore ton nom."
 
         # 3. CALCUL : Détection automatique de calculs (ex: "calcule 5+5" ou juste "5+5")
-        if re.match(r'^[\d\s\+\-\*\/\(\)\.]+$', text):
-            return self.skills.calculate(text)
+        # Cherche si l'input contient principalement des chiffres et opérateurs
+        if any(char in text for char in '+-*/()') and re.search(r'\d', text):
+            # Nettoie l'input pour extraire l'expression
+            expression = re.sub(r'[^\d\+\-\*\/\(\)\.\s]', '', text)
+            if expression.strip():
+                calc_result = self.skills.calculate(expression.strip())
+                self.reflection.add_to_memory(user_input, calc_result)
+                reflection = self.reflection.reflect(user_input, calc_result)
+                if reflection:
+                    calc_result += " " + reflection
+                return calc_result
 
-        if text.startswith("calcule "):
-            expression = text.replace("calcule ", "")
-            return self.skills.calculate(expression)
-
-        return None
+        # 4. CONTEXTE : Résumer la conversation récente
+        if "résume" in text or "contexte" in text:
+            return self.reflection.get_context_summary()
 
     def find_best_match(self, user_input):
         """Cherche la meilleure réponse (Règles ou Compétences)."""
@@ -43,6 +52,10 @@ class DecisionEngine:
         # D'abord, on vérifie si c'est du raisonnement pur
         logic_response = self.analyze_input(user_input)
         if logic_response:
+            self.reflection.add_to_memory(user_input, logic_response)
+            reflection = self.reflection.reflect(user_input, logic_response)
+            if reflection:
+                return logic_response + " " + reflection, "logic_event"
             return logic_response, "logic_event"
 
         # Sinon, on cherche dans la base de règles avec difflib
@@ -62,8 +75,23 @@ class DecisionEngine:
                 if cmd_key in SKILL_MAP:
                     method_name = SKILL_MAP[cmd_key]
                     method = getattr(self.skills, method_name)
-                    return method(), best_key
+                    response = method()
+                    self.reflection.add_to_memory(user_input, response)
+                    reflection = self.reflection.reflect(user_input, response)
+                    if reflection:
+                        response += " " + reflection
+                    return response, best_key
             
+            self.reflection.add_to_memory(user_input, response_template)
+            reflection = self.reflection.reflect(user_input, response_template)
+            if reflection:
+                response_template += " " + reflection
             return response_template, best_key
         
-        return None, None
+        # Si rien trouvé
+        unknown_response = "Je ne sais pas encore répondre à cela. Apprends-moi."
+        self.reflection.add_to_memory(user_input, unknown_response)
+        reflection = self.reflection.reflect(user_input, unknown_response)
+        if reflection:
+            unknown_response += " " + reflection
+        return unknown_response, None
