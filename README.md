@@ -54,6 +54,7 @@ aria_core/
    ```bash
    python main.py  # Pour console
    python main.py --gui  # Pour interface graphique
+   python main.py --debug  # Mode debug avec logs détaillés
    ```
 
 3. Interagissez :
@@ -98,12 +99,23 @@ Toi : comment vas-tu
 ARIA : Je ne sais pas encore répondre à cela. Apprends-moi. Pour mieux t'aider, peux-tu me donner plus de détails ?
 ```
 
-## Développement Futur
+## Mode Debug
 
-- Module Internet pour recherche.
-- Spécialisation métier (ex. : assistant médical).
-- Raisonnement avancé (chaînage logique).
-- Interface graphique.
+Pour déboguer et voir les processus internes :
+- Ajoutez `--debug` au lancement : `python main.py --debug`
+- Affiche des logs détaillés sur :
+  - Inputs utilisateur
+  - Raisonnement avancé
+  - Matches fuzzy
+  - Règles utilisées
+  - Faits sauvegardés/récupérés
+  - Mémoire chargée
+
+Exemple :
+```
+[DEBUG] Input utilisateur : 'bonjour'
+[DEBUG] Matches fuzzy : ['bonjour']
+```
 
 ## Licence
 
