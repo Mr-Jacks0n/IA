@@ -1,6 +1,7 @@
 import datetime
 import math
 import requests
+import webbrowser
 
 class SkillSet:
     def get_date(self):
@@ -41,6 +42,14 @@ class SkillSet:
                 return "Je n'ai pas trouvé d'information précise. Essaie de reformuler ta question."
         except Exception as e:
             return f"Erreur de connexion Internet : {str(e)}"
+
+    def open_browser(self, url="https://www.google.com"):
+        """Ouvre le navigateur par défaut avec l'URL spécifiée."""
+        try:
+            webbrowser.open(url)
+            return f"Navigateur ouvert avec {url}."
+        except Exception as e:
+            return f"Erreur lors de l'ouverture du navigateur : {str(e)}"
 
 # Dictionnaire de mappage pour lier les textes aux fonctions
 SKILL_MAP = {

@@ -2,7 +2,7 @@
     "bonjour": "Bonjour. Je suis ARIA, une intelligence apprenante.",
     "salut": "Salut ! Comment vas-tu ?",
     "quelle heure est-il": "CMD:date",
-    "ouvre google": "CMD:open_browser",
+    "ouvre google": "CMD:open_browser https://www.google.com",
     "au revoir": "Au revoir ! À bientôt.",
     "1578+4500": "6078"
 }

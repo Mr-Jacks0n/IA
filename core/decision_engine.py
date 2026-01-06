@@ -2,6 +2,7 @@ import difflib
 import re
 from core.skills import SkillSet, SKILL_MAP
 from core.reflection import ReflectionEngine
+from config import debug_print
 
 class DecisionEngine:
     def __init__(self, memory):
@@ -75,10 +76,12 @@ class DecisionEngine:
 
     def find_best_match(self, user_input):
         """Cherche la meilleure réponse (Règles ou Compétences)."""
+        debug_print(f"Input utilisateur : '{user_input}'")
         
         # D'abord, raisonnement avancé
         advanced_response = self.advanced_reasoning(user_input)
         if advanced_response:
+            debug_print(f"Raisonnement avancé activé : {advanced_response}")
             self.reflection.add_to_memory(user_input, advanced_response)
             reflection = self.reflection.reflect(user_input, advanced_response)
             if reflection:
@@ -100,6 +103,7 @@ class DecisionEngine:
         
         # cutoff=0.6 signifie qu'il faut 60% de ressemblance
         matches = difflib.get_close_matches(user_input.lower(), known_inputs, n=1, cutoff=0.6)
+        debug_print(f"Matches fuzzy : {matches}")
         
         if matches:
             best_key = matches[0]
@@ -107,7 +111,8 @@ class DecisionEngine:
             
             # Vérification : Est-ce une compétence (CMD:) ?
             if response_template.startswith("CMD:"):
-                cmd_key = response_template.split(" ")[0] # Récupère CMD:date
+                parts = response_template.split(" ", 1)
+                cmd_key = parts[0] # Récupère CMD:date
                 if cmd_key in SKILL_MAP:
                     method_name = SKILL_MAP[cmd_key]
                     method = getattr(self.skills, method_name)
@@ -115,6 +120,10 @@ class DecisionEngine:
                         # Extraire la query de l'input utilisateur
                         query = user_input.lower().replace("recherche", "").strip()
                         response = method(query) if query else "Quelle est ta question de recherche ?"
+                    elif cmd_key == "CMD:open_browser":
+                        # Extraire l'URL du template
+                        url = parts[1] if len(parts) > 1 else "https://www.google.com"
+                        response = method(url)
                     else:
                         response = method()
                     self.reflection.add_to_memory(user_input, response)
