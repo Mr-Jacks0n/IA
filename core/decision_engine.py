@@ -46,10 +46,46 @@ class DecisionEngine:
         if "résume" in text or "contexte" in text:
             return self.reflection.get_context_summary()
 
+    def advanced_reasoning(self, user_input):
+        """Raisonnement avancé : chaînage logique basé sur les faits."""
+        text = user_input.lower()
+        facts = self.memory.facts
+        
+        # Exemple : Si l'utilisateur mentionne une ville et demande la météo
+        if "météo" in text or "temps" in text:
+            # Chercher si une ville est mentionnée ou stockée
+            city = None
+            for word in text.split():
+                if word[0].isupper():  # Ville souvent en majuscule
+                    city = word
+                    break
+            if not city and "ville" in facts:
+                city = facts["ville"]
+            
+            if city:
+                return self.skills.search_web(f"météo {city}")
+        
+        # Autre exemple : Si nom connu et question personnelle
+        if "mon" in text and self.memory.get_fact("user_name"):
+            name = self.memory.get_fact("user_name")
+            if "âge" in text:
+                return f"Je ne connais pas ton âge, {name}."
+        
+        return None
+
     def find_best_match(self, user_input):
         """Cherche la meilleure réponse (Règles ou Compétences)."""
         
-        # D'abord, on vérifie si c'est du raisonnement pur
+        # D'abord, raisonnement avancé
+        advanced_response = self.advanced_reasoning(user_input)
+        if advanced_response:
+            self.reflection.add_to_memory(user_input, advanced_response)
+            reflection = self.reflection.reflect(user_input, advanced_response)
+            if reflection:
+                return advanced_response + " " + reflection, "advanced_reasoning"
+            return advanced_response, "advanced_reasoning"
+        
+        # Ensuite, on vérifie si c'est du raisonnement pur
         logic_response = self.analyze_input(user_input)
         if logic_response:
             self.reflection.add_to_memory(user_input, logic_response)
@@ -75,7 +111,12 @@ class DecisionEngine:
                 if cmd_key in SKILL_MAP:
                     method_name = SKILL_MAP[cmd_key]
                     method = getattr(self.skills, method_name)
-                    response = method()
+                    if cmd_key == "CMD:search":
+                        # Extraire la query de l'input utilisateur
+                        query = user_input.lower().replace("recherche", "").strip()
+                        response = method(query) if query else "Quelle est ta question de recherche ?"
+                    else:
+                        response = method()
                     self.reflection.add_to_memory(user_input, response)
                     reflection = self.reflection.reflect(user_input, response)
                     if reflection:
