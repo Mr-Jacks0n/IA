@@ -1,18 +1,8 @@
-[
-  {
-    "condition": "bonjour",
-    "action": "Bonjour. Je suis ARIA, une intelligence apprenante."
-  },
-  {
-    "condition": "quelle heure est-il",
-    "action": "CMD:get_time"
-  },
-  {
-    "condition": "ouvre google",
-    "action": "CMD:open_browser"
-  },
-  {
-    "condition": "salut",
-    "action": "salut, comment va tu ?"
-  }
-]
+{
+    "bonjour": "Bonjour. Je suis ARIA, une intelligence apprenante.",
+    "salut": "Salut ! Comment vas-tu ?",
+    "quelle heure est-il": "CMD:date",
+    "ouvre google": "CMD:open_browser",
+    "au revoir": "Au revoir ! À bientôt.",
+    "1578+4500": "6078"
+}

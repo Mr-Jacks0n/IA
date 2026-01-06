@@ -1,11 +1,10 @@
 from core.decision_engine import DecisionEngine
 from core.memory import Memory
-from core.skills import execute_command
 from learning.feedback import learn
 
 def start_console():
     memory = Memory()
-    engine = DecisionEngine()
+    engine = DecisionEngine(memory)
 
     print("ARIA est active. Tape 'exit' pour quitter.\n")
 
@@ -15,23 +14,17 @@ def start_console():
             memory.save_context()
             break
 
-        # Gestion du contexte : extraction du nom
-        if "je m'appelle" in user_input.lower():
-            name = user_input.split("appelle")[-1].strip()
-            memory.context["user_name"] = name
-            print(f"ARIA : Enchantée {name}, je m'en souviendrai.")
-            continue  # Pas de feedback pour cette interaction
-
-        response = engine.decide(user_input, memory)
+        response, key = engine.find_best_match(user_input)
         
-        if response.startswith("CMD:"):
-            action = response.split(":", 1)[1]
-            print("ARIA :", execute_command(action))
-            # Pas de feedback pour les commandes automatiques
-        else:
+        if response:
             print("ARIA :", response)
-
-            feedback = input("Réponse correcte ? (oui/non) : ")
-            if feedback.lower() == "non":
-                correction = input("Quelle aurait été la bonne réponse ? ")
-                learn(memory, user_input.lower(), correction)
+            # Pas de feedback pour les événements logiques ou commandes
+            if key != "logic_event" and not response.startswith("Le résultat est") and not "Nous sommes le" in response:
+                feedback = input("Réponse correcte ? (oui/non) : ")
+                if feedback.lower() == "non":
+                    correction = input("Quelle aurait été la bonne réponse ? ")
+                    learn(memory, user_input.lower(), correction)
+        else:
+            print("ARIA : Je ne sais pas encore répondre à cela. Apprends-moi.")
+            correction = input("Quelle serait la bonne réponse ? ")
+            learn(memory, user_input.lower(), correction)

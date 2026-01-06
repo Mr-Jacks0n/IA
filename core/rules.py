@@ -1,22 +1,7 @@
-DEFAULT_RULES = [
-    {
-        "condition": "bonjour",
-        "action": "Bonjour. Je suis ARIA, une intelligence apprenante."
-    },
-    {
-        "condition": "salut",
-        "action": "Salut ! Comment vas-tu ?"
-    },
-    {
-        "condition": "quelle heure est-il",
-        "action": "CMD:get_time"
-    },
-    {
-        "condition": "ouvre google",
-        "action": "CMD:open_browser"
-    },
-    {
-        "condition": "au revoir",
-        "action": "Au revoir ! À bientôt."
-    }
-]
+DEFAULT_RULES = {
+    "bonjour": "Bonjour. Je suis ARIA, une intelligence apprenante.",
+    "salut": "Salut ! Comment vas-tu ?",
+    "quelle heure est-il": "CMD:date",
+    "ouvre google": "CMD:open_browser",
+    "au revoir": "Au revoir ! À bientôt."
+}
