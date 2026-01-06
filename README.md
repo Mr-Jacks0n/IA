@@ -8,8 +8,9 @@ ARIA est une IA symbolique et adaptative basée sur des règles logiques, conçu
 - **Mémoire persistante** : Stocke règles, faits, expériences et contexte dans des fichiers JSON.
 - **Compréhension floue** : Utilise la similarité pour matcher les entrées (ex. "salut" ≈ "slt").
 - **Commandes spéciales** : Peut exécuter des actions (heure, ouvrir navigateur, météo).
-- **Calcul automatique** : Détecte et calcule des expressions mathématiques (ex. "5+5").
+- **Calcul automatique** : Détecte et calcule des expressions mathématiques flexibles (ex. "5+5", "et 45*2").
 - **Raisonnement contextuel** : Se souvient de faits personnels (nom, etc.) et répond en conséquence.
+- **Conscience et Réflexion** : Mémoire courte terme, auto-réflexion sur réponses, résumé de contexte, questions pour approfondir.
 - **Interface console** : Interaction simple via CLI.
 - **Apprentissage humain** : Corrige et apprend de chaque interaction (sauf pour actions automatiques).
 
@@ -21,7 +22,8 @@ aria_core/
 │   ├── decision_engine.py  # Moteur de décision avec raisonnement et fuzzy matching
 │   ├── memory.py           # Gestion mémoire (règles, faits, contexte)
 │   ├── rules.py            # Règles par défaut
-│   └── skills.py           # Compétences (calcul, date, météo)
+│   ├── skills.py           # Compétences (calcul, date, météo)
+│   └── reflection.py       # Conscience et réflexion (mémoire courte, auto-analyse)
 ├── learning/
 │   └── feedback.py         # Apprentissage par feedback
 ├── interface/
@@ -72,13 +74,17 @@ ARIA : Enchanté Alice, je m'en souviendrai.
 Toi : quel est mon nom
 ARIA : Tu t'appelles Alice.
 
-Toi : quelle heure est-il
-ARIA : Nous sommes le 06/01/2026 et il est 15:45
+Toi : calcule 15 + 15 * 2
+ARIA : Le résultat est : 45
+
+Toi : et 45*2
+ARIA : Le résultat est : 90
+
+Toi : résume
+ARIA : Récemment, nous avons parlé de : je m'appelle Alice..., quel est mon nom, calcule 15 + 15 * 2.
 
 Toi : comment vas-tu
-ARIA : Je ne sais pas encore répondre à cela. Apprends-moi.
-Réponse correcte ? (oui/non) : non
-Quelle aurait été la bonne réponse ? Très bien, merci !
+ARIA : Je ne sais pas encore répondre à cela. Apprends-moi. Pour mieux t'aider, peux-tu me donner plus de détails ?
 ```
 
 ## Développement Futur
