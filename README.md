@@ -5,29 +5,35 @@ ARIA est une IA symbolique et adaptative basée sur des règles logiques, conçu
 ## Fonctionnalités
 
 - **Apprentissage par règles IF/THEN** : Répond basé sur des conditions apprises.
-- **Mémoire persistante** : Stocke règles, expériences et contexte dans des fichiers JSON.
+- **Mémoire persistante** : Stocke règles, faits, expériences et contexte dans des fichiers JSON.
 - **Compréhension floue** : Utilise la similarité pour matcher les entrées (ex. "salut" ≈ "slt").
-- **Commandes spéciales** : Peut exécuter des actions (heure, ouvrir navigateur).
-- **Contexte utilisateur** : Se souvient du nom et d'autres infos.
+- **Commandes spéciales** : Peut exécuter des actions (heure, ouvrir navigateur, météo).
+- **Calcul automatique** : Détecte et calcule des expressions mathématiques (ex. "5+5").
+- **Raisonnement contextuel** : Se souvient de faits personnels (nom, etc.) et répond en conséquence.
 - **Interface console** : Interaction simple via CLI.
-- **Apprentissage humain** : Corrige et apprend de chaque interaction (sauf pour commandes).
+- **Apprentissage humain** : Corrige et apprend de chaque interaction (sauf pour actions automatiques).
 
 ## Structure du Projet
 
 ```
 aria_core/
 ├── core/
-│   ├── decision_engine.py  # Moteur de décision
-│   ├── memory.py           # Gestion mémoire
-│   └── rules.py            # Règles par défaut
+│   ├── decision_engine.py  # Moteur de décision avec raisonnement et fuzzy matching
+│   ├── memory.py           # Gestion mémoire (règles, faits, contexte)
+│   ├── rules.py            # Règles par défaut
+│   └── skills.py           # Compétences (calcul, date, météo)
 ├── learning/
-│   └── feedback.py         # Apprentissage
+│   └── feedback.py         # Apprentissage par feedback
 ├── interface/
 │   └── console.py          # Interface CLI
+├── utils/
+│   └── clean_data.py       # Outil de nettoyage des données
 ├── data/
 │   ├── rules.json          # Règles apprises
-│   └── experiences.json    # Expériences (futur)
-└── main.py                 # Point d'entrée
+│   ├── facts.json          # Faits mémorisés (nom, etc.)
+│   ├── experiences.json    # Expériences (futur)
+│   └── context.json        # Contexte utilisateur
+└── main.py & README.md
 ```
 
 ## Installation et Lancement
@@ -57,14 +63,17 @@ Toi : bonjour
 ARIA : Bonjour. Je suis ARIA, une intelligence apprenante.
 Réponse correcte ? (oui/non) : oui
 
-Toi : quelle heure est-il
-ARIA : 14:30
-
-Toi : ouvre google
-ARIA : J'ai ouvert Google pour toi.
+Toi : 1578 + 4500
+ARIA : Le résultat est : 6078
 
 Toi : je m'appelle Alice
-ARIA : Enchantée Alice, je m'en souviendrai.
+ARIA : Enchanté Alice, je m'en souviendrai.
+
+Toi : quel est mon nom
+ARIA : Tu t'appelles Alice.
+
+Toi : quelle heure est-il
+ARIA : Nous sommes le 06/01/2026 et il est 15:45
 
 Toi : comment vas-tu
 ARIA : Je ne sais pas encore répondre à cela. Apprends-moi.
