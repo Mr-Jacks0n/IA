@@ -2,5 +2,17 @@
   {
     "condition": "bonjour",
     "action": "Bonjour. Je suis ARIA, une intelligence apprenante."
+  },
+  {
+    "condition": "quelle heure est-il",
+    "action": "CMD:get_time"
+  },
+  {
+    "condition": "ouvre google",
+    "action": "CMD:open_browser"
+  },
+  {
+    "condition": "salut",
+    "action": "salut, comment va tu ?"
   }
 ]

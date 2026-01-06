@@ -9,11 +9,17 @@ class Memory:
             self.rules = DEFAULT_RULES
             self.save_rules()
         self.experiences = self._load("data/experiences.json")
+        self.context = self._load("data/context.json") or {}
 
     def _load(self, path):
         if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
-                return json.load(f)
+            data = json.load(open(path, "r", encoding="utf-8"))
+            # Normaliser les conditions en minuscules
+            if isinstance(data, list):
+                for item in data:
+                    if "condition" in item:
+                        item["condition"] = item["condition"].lower()
+            return data
         return []
 
     def save_rules(self):
@@ -23,3 +29,7 @@ class Memory:
     def save_experiences(self):
         with open("data/experiences.json", "w", encoding="utf-8") as f:
             json.dump(self.experiences, f, indent=2, ensure_ascii=False)
+
+    def save_context(self):
+        with open("data/context.json", "w", encoding="utf-8") as f:
+            json.dump(self.context, f, indent=2, ensure_ascii=False)
