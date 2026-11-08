@@ -28,7 +28,7 @@ jobs:
         python -m pip install flake8
         python -m pip install -r requirements.txt
 
-    - name: Lint (bloquant : syntaxe & noms non définis)
+    - name: Lint bloquant (syntaxe et noms non définis)
       run: flake8 . --exclude=.venv --count --select=E9,F63,F7,F82 --show-source --statistics
 
     - name: Smoke test — session console scriptée
