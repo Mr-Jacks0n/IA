@@ -1,122 +1,128 @@
-# ARIA - Intelligence Apprenante Locale
+<p align="center">
+  <img src="docs/banner.png" alt="ARIA — Symbolic, learning AI" width="100%">
+</p>
 
-ARIA est une IA symbolique et adaptative basée sur des règles logiques, conçue pour apprendre uniquement via l'interaction humaine. Sans modèles de machine learning ou LLM, elle utilise un moteur de décision, une mémoire persistante et un apprentissage par feedback.
+# ARIA — Local Learnable Intelligence
 
-## Fonctionnalités
+ARIA is a **symbolic, adaptive AI**: a rule engine, a persistent memory and a
+feedback loop — no LLM, no machine learning model, no cloud. It learns
+exclusively from the conversations you have with it and runs **100% on your
+machine**.
 
-- **Apprentissage par règles IF/THEN** : Répond basé sur des conditions apprises.
-- **Mémoire persistante** : Stocke règles, faits, expériences et contexte dans des fichiers JSON.
-- **Compréhension floue** : Utilise la similarité pour matcher les entrées (ex. "salut" ≈ "slt").
-- **Commandes spéciales** : Peut exécuter des actions (heure, ouvrir navigateur, météo, recherche web).
-- **Calcul automatique** : Détecte et calcule des expressions mathématiques flexibles (ex. "5+5", "et 45*2").
-- **Raisonnement contextuel** : Se souvient de faits personnels (nom, etc.) et répond en conséquence.
-- **Raisonnement avancé** : Chaînage logique basé sur les faits (ex. météo d'une ville).
-- **Module Internet** : Recherche web via API DuckDuckGo.
-- **Conscience et Réflexion** : Mémoire courte terme, auto-réflexion sur réponses, résumé de contexte, questions pour approfondir.
-- **Interface console** : Interaction simple via CLI.
-- **Interface graphique** : GUI avec Tkinter pour une expérience visuelle.
-- **Apprentissage humain** : Corrige et apprend de chaque interaction (sauf pour actions automatiques).
+[![CI (Python 3.10 → 3.12)](https://github.com/bindedouworker-hub/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/bindedouworker-hub/IA/actions/workflows/python-package.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 
-## Structure du Projet
+> 🇫🇷 Une version française de ce README est disponible :
+> **[README.fr.md](README.fr.md)**
+
+## ✨ Features
+
+- **IF/THEN rule learning** — answers are matched against learned rules;
+  every unknown input is a teaching opportunity (`Réponse correcte ?` →
+  new rule written to disk).
+- **Persistent memory** — rules, facts, experiences and context are plain
+  JSON files in `data/`, readable and editable by hand.
+- **Fuzzy understanding** — `difflib.get_close_matches` maps typos and
+  variants to known rules ("qu'elle heure" → "quelle heure est-il").
+- **Automatic calculations** — detects expressions anywhere in the input
+  ("1550 + 12500" → `Le résultat est : 14050`) through a **safe AST
+  evaluator** (no raw `eval`, bounded exponents — see changelog).
+- **Fact-based reasoning** — statements ("je m'appelle Martin") are stored
+  as facts and later recalled ("quel est mon nom" → "Tu t'appelles martin.").
+- **Web search** — "recherche python" triggers a real DuckDuckGo Instant
+  Answer query over `requests` (the only network dependency).
+- **Reflection** — a short-term memory of the last exchanges gives ARIA
+  self-observations: it flags unknown answers, notices repeated topics,
+  asks follow-up questions.
+- **Special commands** — time/date, open browser, web search
+  (skill mapping `CMD:*` handled by `core/skills.py`).
+- **Two interfaces** — console (works without tkinter) and Tkinter GUI.
+- **Debug mode** — `--debug` prints every decision step: fuzzy matches,
+  memory loads, facts.
+
+## 🖼 What it looks like
+
+Real Tkinter window, captured during a genuine session — the "1550 + 12500"
+calculation and the remembered name are live answers:
+
+<p align="center">
+  <img src="docs/gui_screenshot.png" alt="ARIA GUI, real session" width="420">
+</p>
+
+## 🚀 Getting started
+
+```bash
+git clone https://github.com/bindedouworker-hub/IA.git
+cd IA
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt        # requests is the only dependency
+
+python main.py          # console mode
+python main.py --gui    # graphical mode (needs python3-tk)
+python main.py --debug  # console + decision logs
+python utils/clean_data.py   # lowercase-normalize saved rules
+```
+
+Console works on servers with no tkinter installed; `--gui` prints
+an actionable install hint (`sudo apt install python3-tk`) if Tk is absent.
+
+## 🗂 Project structure
 
 ```
-aria_core/
+.
+├── main.py                    # entry point: console | --gui | --debug
+├── config.py                  # DEBUG_MODE + debug_print helper
 ├── core/
-│   ├── decision_engine.py  # Moteur de décision avec raisonnement et fuzzy matching
-│   ├── memory.py           # Gestion mémoire (règles, faits, contexte)
-│   ├── rules.py            # Règles par défaut
-│   ├── skills.py           # Compétences (calcul, date, météo)
-│   └── reflection.py       # Conscience et réflexion (mémoire courte, auto-analyse)
-├── learning/
-│   └── feedback.py         # Apprentissage par feedback
+│   ├── decision_engine.py     # routing: reasoning → logic → rules → unknown
+│   ├── rules.py               # DEFAULT_RULES (seed rules)
+│   ├── memory.py              # persistent JSON memory (rules/facts/context)
+│   ├── reflection.py          # short-term memory + self-observations
+│   └── skills.py              # date, calculator (AST-safe), web search, browser
 ├── interface/
-│   ├── console.py          # Interface CLI
-│   └── gui.py              # Interface graphique Tkinter
-├── utils/
-│   └── clean_data.py       # Outil de nettoyage des données
-├── data/
-│   ├── rules.json          # Règles apprises
-│   ├── facts.json          # Faits mémorisés (nom, etc.)
-│   ├── experiences.json    # Expériences (futur)
-│   └── context.json        # Contexte utilisateur
-└── main.py & README.md
+│   ├── console.py             # REPL + oui/non feedback loop
+│   └── gui.py                 # Tkinter chat window
+├── learning/feedback.py       # learn(rule) → Memory.add_rule
+├── utils/clean_data.py        # normalize saved rule keys
+├── data/*.json                # persistent state (defaults shipped)
+├── docs/                      # banner + real GUI screenshot
+└── .github/                   # CI + issue/PR templates
 ```
 
-## Installation et Lancement
+## 🧪 Quality & CI
 
-1. Clonez le dépôt :
-   ```bash
-   git clone https://github.com/bindedouworker-hub/IA.git
-   cd IA/aria_core
-   ```
+Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
 
-2. Lancez l'IA :
-   ```bash
-   python main.py  # Pour console
-   python main.py --gui  # Pour interface graphique
-   python main.py --debug  # Mode debug avec logs détaillés
-   ```
+1. lints the codebase (flake8, blocking),
+2. runs a **scripted console session** (greet → teach confirmation →
+   calculation → name memorization → recall → date command → clean exit)
+   and asserts the exact expected answers,
+3. launches ARIA from an unrelated working directory to guarantee the
+   data paths are anchored to the project root,
+4. fails if any `__pycache__/*.pyc` sneaks back into the index.
 
-3. Interagissez :
-   - Tapez un message.
-   - Répondez "oui" ou "non" au feedback.
-   - Si "non", fournissez la correction pour apprendre.
+## 📜 Version history
 
-## Exemple d'Interaction
+- **1.0.0** — rule engine, fuzzy matching, persistent memory, feedback
+  learning, facts, reflection, web search, GUI.
+- **1.1.0** — reliability pass: fixed the reflection engine comparing an
+  exchange with itself, the web-search routing that never fired, an
+  `eval()` DoS in the calculator, the hard tkinter dependency, and
+  CWD-relative data paths. See [CHANGELOG.md](CHANGELOG.md).
 
-```
-ARIA est active. Tape 'exit' pour quitter.
+## 🗺 Roadmap
 
-Toi : bonjour
-ARIA : Bonjour. Je suis ARIA, une intelligence apprenante.
-Réponse correcte ? (oui/non) : oui
+- [ ] Richer fact schemas (age, city, preferences) + follow-up reasoning
+- [ ] Multi-shot learning: keep several candidate answers per rule
+- [ ] Accent/diacritics normalization before fuzzy matching
+- [ ] Export/import of a memory as shareable "knowledge pack"
+- [ ] Voice input via `speech_recognition` (optional extra)
 
-Toi : 1578 + 4500
-ARIA : Le résultat est : 6078
+## 🤝 Contributing
 
-Toi : je m'appelle Alice
-ARIA : Enchanté Alice, je m'en souviendrai.
+Issues and PRs are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Templates are provided for bugs, ideas and pull requests.
 
-Toi : quel est mon nom
-ARIA : Tu t'appelles Alice.
+## ⚖️ License
 
-Toi : calcule 15 + 15 * 2
-ARIA : Le résultat est : 45
-
-Toi : et 45*2
-ARIA : Le résultat est : 90
-
-Toi : recherche python
-ARIA : Voici ce que j'ai trouvé : Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation.
-
-Toi : quel temps fait-il à Paris
-ARIA : Voici ce que j'ai trouvé : [Informations météo pour Paris]
-
-Toi : résume
-ARIA : Récemment, nous avons parlé de : recherche python, quel temps fait-il à Paris.
-
-Toi : comment vas-tu
-ARIA : Je ne sais pas encore répondre à cela. Apprends-moi. Pour mieux t'aider, peux-tu me donner plus de détails ?
-```
-
-## Mode Debug
-
-Pour déboguer et voir les processus internes :
-- Ajoutez `--debug` au lancement : `python main.py --debug`
-- Affiche des logs détaillés sur :
-  - Inputs utilisateur
-  - Raisonnement avancé
-  - Matches fuzzy
-  - Règles utilisées
-  - Faits sauvegardés/récupérés
-  - Mémoire chargée
-
-Exemple :
-```
-[DEBUG] Input utilisateur : 'bonjour'
-[DEBUG] Matches fuzzy : ['bonjour']
-```
-
-## Licence
-
-Ce projet est open-source. Utilisez et modifiez librement.
+[MIT](LICENSE) — © 2026 Mr Jackson.

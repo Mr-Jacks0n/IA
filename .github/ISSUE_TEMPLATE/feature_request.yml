@@ -1,0 +1,32 @@
+name: Feature request
+description: Proposer une amélioration (règles, réflexion, mémoire, compétences…)
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Votre idée
+      description: |
+        Rappelez-vous le paradigme du projet : **règles logiques + mémoire JSON + feedback humain, 100 % local, pas de LLM**. Les idées doivent rester dans ce cadre (voir CONTRIBUTING.md).
+      placeholder: ex. améliorer le fuzzy matching des accents, ajouter des réflexions…
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Exemple de conversation attendue
+      description: Décrivez l'échange Toi/ARIA que votre idée rendrait possible.
+      placeholder: |
+        Toi : j'habite à Lyon
+        ARIA : Enchanté, je m'en souviendrai.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Portée
+      options:
+        - label: Moteur de règles / fuzzy matching
+        - label: Réflexion & mémoire courte terme
+        - label: Faits & raisonnement
+        - label: Compétences réseau (heure, recherche, météo…)
+        - label: Interface (console / GUI)
+        - label: Documentation

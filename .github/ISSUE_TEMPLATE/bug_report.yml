@@ -1,0 +1,40 @@
+name: Bug report
+description: Signaler un comportement incorrect d'ARIA (console, GUI, apprentissage)
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Merci de prendre le temps de signaler ce bug. **Ne collez jamais le contenu de vos fichiers `data/*.json`** (ils peuvent contenir ce qu'ARIA a appris de vous).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Que s'est-il passé ?
+      description: Comportement observé vs comportement attendu. Complétez si utile par «Aria a appris…» uniquement si c'est reproductible avec les règles d'usine.
+      placeholder: Étapes pour reproduire, avec la console pour de préférence (mode `--debug`)
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode concerné
+      options:
+        - Console
+        - GUI (Tkinter)
+        - Les deux
+        - CLI (arguments --gui/--debug)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version de Python
+      placeholder: ex. 3.12.4
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Système d'exploitation
+      placeholder: ex. Ubuntu 24.04, Windows 11…
+    validations:
+      required: true
