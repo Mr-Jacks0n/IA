@@ -1,9 +1,13 @@
 import json
 import os
 
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        '..', 'data')          # utils/ → racine/data
+
+
 def clean_rules():
-    path = '../data/rules.json'
-    
+    path = os.path.join(DATA_DIR, 'rules.json')
+
     if not os.path.exists(path):
         print("Fichier rules.json introuvable.")
         return

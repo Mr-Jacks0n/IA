@@ -52,6 +52,18 @@ class DecisionEngine:
         text = user_input.lower()
         facts = self.memory.facts
         
+        # Module Internet : recherche web explicite ("recherche python",
+        # "cherche tutoriel flask").  ⚠️ Auparavant, seule la règle floue
+        # "recherche" existait : difflib ne matchait jamais un input
+        # complet comme "recherche python" contre la clé "recherche"
+        # (cutoff 0.6) → le module web annoncé dans le README ne
+        # se déclenchait jamais. On route ici AVANT les règles.
+        match = re.match(r"^(?:recherche|cherche|recherche sur le web)\s+(.+)$", text)
+        if match:
+            query = match.group(1).strip()
+            if query:
+                return self.skills.search_web(query)
+
         # Exemple : Si l'utilisateur mentionne une ville et demande la météo
         if "météo" in text or "temps" in text:
             # Chercher si une ville est mentionnée ou stockée

@@ -18,8 +18,11 @@ class ReflectionEngine:
             reflection = "Je pourrais apprendre cela si tu me le dis."
 
         # Réflexion 2 : Cohérence avec la mémoire
-        if self.short_term_memory:
-            last_exchange = self.short_term_memory[-1]
+        # ⚠️ On compare l'échange COURANT au précédent, pas à lui-même :
+        # add_to_memory() est appelé avant reflect() dans le moteur de
+        # décision, donc l'échange courant est déjà short_term_memory[-1].
+        if len(self.short_term_memory) >= 2:
+            last_exchange = self.short_term_memory[-2]
             if "nom" in user_input.lower() and "nom" in last_exchange["user"].lower():
                 reflection = "Je me souviens que nous parlions de noms."
 

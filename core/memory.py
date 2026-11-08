@@ -3,16 +3,21 @@ import os
 from .rules import DEFAULT_RULES
 from config import debug_print
 
+# Chemins ancrés à la racine du projet via ce fichier : ARIA fonctionne
+# quel que soit le répertoire courant (python /chemin/IA/main.py aussi).
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_DATA_DIR = os.path.join(_ROOT, 'data')
+
 class Memory:
     def __init__(self):
-        self.rules_file = 'data/rules.json'
-        self.facts_file = 'data/facts.json' # Nouveau fichier pour le raisonnement
+        self.rules_file = os.path.join(_DATA_DIR, 'rules.json')
+        self.facts_file = os.path.join(_DATA_DIR, 'facts.json')  # Nouveau fichier pour le raisonnement
         self.rules = self._load_json(self.rules_file)
         if not self.rules:
             self.rules = DEFAULT_RULES
             self.save_rules()
         self.facts = self._load_json(self.facts_file)
-        self.context = self._load_json('data/context.json') or {}
+        self.context = self._load_json(os.path.join(_DATA_DIR, 'context.json')) or {}
         debug_print(f"Mémoire chargée : {len(self.rules)} règles, {len(self.facts)} faits")
 
     def _load_json(self, filepath):
@@ -48,5 +53,5 @@ class Memory:
         return value
 
     def save_context(self):
-        with open('data/context.json', 'w', encoding='utf-8') as f:
+        with open(os.path.join(_DATA_DIR, 'context.json'), 'w', encoding='utf-8') as f:
             json.dump(self.context, f, indent=2, ensure_ascii=False)

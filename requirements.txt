@@ -1,0 +1,7 @@
+# ARIA — dépendances Python
+# La bibliothèque standard fournit tout le reste (tkinter, json, difflib…).
+requests>=2.31        # recherche web (DuckDuckGo), météo
+
+# Note système : pour l'interface graphique (--gui), installez Tk
+#   Debian/Ubuntu : sudo apt install python3-tk
+#   Fedora        : sudo dnf install python3-tkinter

@@ -1,7 +1,48 @@
+import ast
 import datetime
-import math
+import operator
 import requests
 import webbrowser
+
+# Évaluateur AST : aucun eval() brut sur une entrée utilisateur.
+# ⚠️ Ancien code : eval(expression) — la whitelist de caractères
+# autorisait '*', donc "9**9**9" (recursif, chiffres autorisés)
+# figeait le process indéfiniment (testé : timeout). Un simple
+# message pouvait bloquer ARIA.
+_BINOPS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.FloorDiv: operator.floordiv,
+    ast.Mod: operator.mod,
+}
+_MAX_EXPONENT = 100      # borne anti-DoS sur les puissances
+_MAX_LENGTH = 100        # borne sur la taille de l'expression
+
+
+def _safe_eval(node, depth=0):
+    if depth > 50:
+        raise ValueError("expression trop imbriquée")
+    if isinstance(node, ast.Expression):
+        return _safe_eval(node.body, depth + 1)
+    if (isinstance(node, ast.Constant)
+            and isinstance(node.value, (int, float))
+            and not isinstance(node.value, bool)):
+        return node.value
+    if isinstance(node, ast.BinOp) and (
+            type(node.op) in _BINOPS or isinstance(node.op, ast.Pow)):
+        left = _safe_eval(node.left, depth + 1)
+        right = _safe_eval(node.right, depth + 1)
+        if isinstance(node.op, ast.Pow):
+            if abs(right) > _MAX_EXPONENT:
+                raise ValueError("exposant trop grand")
+            return left ** right
+        return _BINOPS[type(node.op)](left, right)
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+        value = _safe_eval(node.operand, depth + 1)
+        return value if isinstance(node.op, ast.UAdd) else -value
+    raise ValueError("expression non autorisée")
 
 class SkillSet:
     def get_date(self):
@@ -10,16 +51,19 @@ class SkillSet:
         return f"Nous sommes le {now.strftime('%d/%m/%Y')} et il est {now.strftime('%H:%M')}."
 
     def calculate(self, expression):
-        """Calculatrice sécurisée basique."""
+        """Calculatrice sécurisée (AST, sans eval brut)."""
         try:
+            expression = expression.strip()
+            if not expression or len(expression) > _MAX_LENGTH:
+                return "Erreur de calcul. Vérifie ta formule."
             # Sécurité : on n'autorise que les chiffres et opérateurs mathématiques
             allowed = set("0123456789+-*/(). ")
             if not set(expression).issubset(allowed):
                 return "Je ne peux calculer que des opérations mathématiques simples."
-            
-            result = eval(expression)
+            tree = ast.parse(expression, mode="eval")
+            result = _safe_eval(tree)
             return f"Le résultat est : {result}"
-        except Exception:
+        except (ValueError, SyntaxError, ZeroDivisionError, OverflowError):
             return "Erreur de calcul. Vérifie ta formule."
 
     def get_weather(self):

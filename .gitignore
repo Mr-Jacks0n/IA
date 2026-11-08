@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# Environnement & outils
+.env
+.DS_Store
+*.swp
+
+# ARIA : fichiers temporaires de dev
+_capture_gui.py
+
+# Données d'apprentissage générées par l'usage (NE PAS publier de données
+# personnelles) : data/ contient les 4 fichiers par défaut versionnés
+# (règles par défaut, dictionnaires vides). Tout fichier supplémentaire
+# créé à l'exécution est ignoré.
+data/*.bak
