@@ -1,7 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Python package
+name: CI (Python 3.10 → 3.12)
 
 on:
   push:
@@ -11,30 +8,54 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
+        python -m pip install flake8
+        python -m pip install -r requirements.txt
+
+    - name: Lint (bloquant : syntaxe & noms non définis)
+      run: flake8 . --exclude=.venv --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    - name: Smoke test — session console scriptée
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+        # Session complète : accueil + feedback d'apprentissage, calcul
+        # automatique, mémorisation du nom, rappel du nom, commande date,
+        # sortie propre. Tout est lu depuis l'entrée standard.
+        printf 'bonjour\noui\n1550 + 12500\nje m'"'"'appelle Test\nquel est mon nom\nquelle heure est-il\nexit\n' \
+          | python main.py | tee sortie_session.txt
+        test -f sortie_session.txt
+
+        # Chemins des données résolus via __file__ : lancement depuis
+        # un répertoire courant quelconque doit fonctionner.
+        cd /tmp
+        printf 'bonjour\noui\nexit\n' | python "$GITHUB_WORKSPACE/main.py" > /dev/null
+
+    - name: Vérifier les réponses attendues
       run: |
-        pytest
+        grep -q "Bonjour. Je suis ARIA" sortie_session.txt
+        grep -q "Le résultat est : 14050" sortie_session.txt
+        grep -q "Tu t'appelles test" sortie_session.txt
+        grep -q "Nous sommes le" sortie_session.txt
+
+    - name: Vérifier qu'aucun __pycache__ n'est versionné
+      run: |
+        if git ls-files | grep -qE "pycache|\.pyc$"; then
+          echo "::error::des fichiers .pyc sont versionnés"
+          git ls-files | grep -E "pycache|\.pyc$"
+          exit 1
+        fi
