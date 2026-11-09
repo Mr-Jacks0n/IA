@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="docs/banner.png" alt="ARIA — Symbolic, learning AI" width="100%">
+  <img src="docs/banner.png" alt="ARIA · Symbolic, learning AI" width="100%">
 </p>
 
-# ARIA — Local Learnable Intelligence
+# ARIA · Local Learnable Intelligence
 
 ARIA is a **symbolic, adaptive AI**: a rule engine, a persistent memory and a
-feedback loop — no LLM, no machine learning model, no cloud. It learns
+feedback loop · no LLM, no machine learning model, no cloud. It learns
 exclusively from the conversations you have with it and runs **100% on your
 machine**.
 
@@ -18,32 +18,32 @@ machine**.
 
 ## ✨ Features
 
-- **IF/THEN rule learning** — answers are matched against learned rules;
+- **IF/THEN rule learning** · answers are matched against learned rules;
   every unknown input is a teaching opportunity (`Réponse correcte ?` →
   new rule written to disk).
-- **Persistent memory** — rules, facts, experiences and context are plain
+- **Persistent memory** · rules, facts, experiences and context are plain
   JSON files in `data/`, readable and editable by hand.
-- **Fuzzy understanding** — `difflib.get_close_matches` maps typos and
+- **Fuzzy understanding** · `difflib.get_close_matches` maps typos and
   variants to known rules ("qu'elle heure" → "quelle heure est-il").
-- **Automatic calculations** — detects expressions anywhere in the input
+- **Automatic calculations** · detects expressions anywhere in the input
   ("1550 + 12500" → `Le résultat est : 14050`) through a **safe AST
-  evaluator** (no raw `eval`, bounded exponents — see changelog).
-- **Fact-based reasoning** — statements ("je m'appelle Martin") are stored
+  evaluator** (no raw `eval`, bounded exponents · see changelog).
+- **Fact-based reasoning** · statements ("je m'appelle Martin") are stored
   as facts and later recalled ("quel est mon nom" → "Tu t'appelles martin.").
-- **Web search** — "recherche python" triggers a real DuckDuckGo Instant
+- **Web search** · "recherche python" triggers a real DuckDuckGo Instant
   Answer query over `requests` (the only network dependency).
-- **Reflection** — a short-term memory of the last exchanges gives ARIA
+- **Reflection** · a short-term memory of the last exchanges gives ARIA
   self-observations: it flags unknown answers, notices repeated topics,
   asks follow-up questions.
-- **Special commands** — time/date, open browser, web search
+- **Special commands** · time/date, open browser, web search
   (skill mapping `CMD:*` handled by `core/skills.py`).
-- **Two interfaces** — console (works without tkinter) and Tkinter GUI.
-- **Debug mode** — `--debug` prints every decision step: fuzzy matches,
+- **Two interfaces** · console (works without tkinter) and Tkinter GUI.
+- **Debug mode** · `--debug` prints every decision step: fuzzy matches,
   memory loads, facts.
 
 ## 🖼 What it looks like
 
-Real Tkinter window, captured during a genuine session — the "1550 + 12500"
+Real Tkinter window, captured during a genuine session · the "1550 + 12500"
 calculation and the remembered name are live answers:
 
 <p align="center">
@@ -103,9 +103,9 @@ Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
 
 ## 📜 Version history
 
-- **1.0.0** — rule engine, fuzzy matching, persistent memory, feedback
+- **1.0.0** · rule engine, fuzzy matching, persistent memory, feedback
   learning, facts, reflection, web search, GUI.
-- **1.1.0** — reliability pass: fixed the reflection engine comparing an
+- **1.1.0** · reliability pass: fixed the reflection engine comparing an
   exchange with itself, the web-search routing that never fired, an
   `eval()` DoS in the calculator, the hard tkinter dependency, and
   CWD-relative data paths. See [CHANGELOG.md](CHANGELOG.md).
@@ -120,9 +120,9 @@ Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
 
 ## 🤝 Contributing
 
-Issues and PRs are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Issues and PRs are welcome · see [CONTRIBUTING.md](CONTRIBUTING.md).
 Templates are provided for bugs, ideas and pull requests.
 
 ## ⚖️ License
 
-[MIT](LICENSE) — © 2026 Mr Jackson.
+[MIT](LICENSE) · © 2026 Mr Jackson.

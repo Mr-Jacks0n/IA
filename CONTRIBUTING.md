@@ -1,7 +1,7 @@
-# Contribuer à ARIA — L'IA Symbolique Apprenante
+# Contribuer à ARIA · L'IA Symbolique Apprenante
 
 Merci de votre intérêt ! ARIA est un projet d'étude **100 % local** :
-aucun LLM, aucun modèle d'apprentissage automatique — uniquement des
+aucun LLM, aucun modèle d'apprentissage automatique · uniquement des
 règles logiques, une mémoire JSON et votre feedback. Toutes les
 contributions sont bienvenues.
 
@@ -19,7 +19,7 @@ python main.py --debug    # console + logs de décision
 ```
 
 Serveur Linux sans interface graphique ? La console fonctionne sans
-tkinter — c'est voulu (voir le changelog 1.1.0).
+tkinter · c'est voulu (voir le changelog 1.1.0).
 
 ## Règles du projet
 
@@ -48,7 +48,7 @@ tkinter — c'est voulu (voir le changelog 1.1.0).
    touchée, en GUI.
 4. Committez avec un message conventionnel
    (`fix:` / `feat:` / `docs:` / `refactor:` …).
-5. Ouvrez une Pull Request — le template vous guide.
+5. Ouvrez une Pull Request · le template vous guide.
 
 ## Bonnes premières contributions
 

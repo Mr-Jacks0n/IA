@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="docs/banner.png" alt="ARIA — IA symbolique apprenante" width="100%">
+  <img src="docs/banner.png" alt="ARIA · IA symbolique apprenante" width="100%">
 </p>
 
-# ARIA — Intelligence Apprenante Locale
+# ARIA · Intelligence Apprenante Locale
 
 ARIA est une IA **symbolique et adaptative** : un moteur de règles, une
-mémoire persistante et une boucle de feedback — aucun LLM, aucun modèle
+mémoire persistante et une boucle de feedback · aucun LLM, aucun modèle
 d'apprentissage automatique, aucun cloud. Elle apprend exclusivement des
 conversations que vous avez avec elle et fonctionne **100 % sur votre
 machine**.
@@ -19,34 +19,34 @@ machine**.
 
 ## ✨ Fonctionnalités
 
-- **Apprentissage par règles IF/THEN** — les réponses sont comparées aux
+- **Apprentissage par règles IF/THEN** · les réponses sont comparées aux
   règles apprises ; chaque entrée inconnue est une occasion d'apprendre
   (`Réponse correcte ?` → nouvelle règle écrite sur disque).
-- **Mémoire persistante** — règles, faits, expériences et contexte sont des
+- **Mémoire persistante** · règles, faits, expériences et contexte sont des
   fichiers JSON lisibles et éditables à la main dans `data/`.
-- **Compréhension floue** — `difflib.get_close_matches` rattache les
+- **Compréhension floue** · `difflib.get_close_matches` rattache les
   coquilles et variantes aux règles connues ("qu'elle heure" →
   "quelle heure est-il").
-- **Calculs automatiques** — détecte les expressions où qu'elles soient
+- **Calculs automatiques** · détecte les expressions où qu'elles soient
   ("1550 + 12500" → `Le résultat est : 14050`) via un **évaluateur AST
-  sécurisé** (pas de `eval` brut, exposants bornés — voir changelog).
-- **Raisonnement sur faits** — « je m'appelle Martin » est mémorisé comme
+  sécurisé** (pas de `eval` brut, exposants bornés · voir changelog).
+- **Raisonnement sur faits** · « je m'appelle Martin » est mémorisé comme
   un fait et restitué plus tard (« quel est mon nom » →
   « Tu t'appelles martin. »).
-- **Recherche web** — « recherche python » déclenche une vraie requête
+- **Recherche web** · « recherche python » déclenche une vraie requête
   DuckDuckGo Instant Answer via `requests` (la seule dépendance réseau).
-- **Réflexion** — une mémoire courte terme des derniers échanges donne à
+- **Réflexion** · une mémoire courte terme des derniers échanges donne à
   ARIA des auto-observations : elle signale les réponses inconnues,
   remarque les sujets répétés et pose des questions de relance.
-- **Commandes spéciales** — heure/date, ouvrir le navigateur, recherche
+- **Commandes spéciales** · heure/date, ouvrir le navigateur, recherche
   web (mappage `CMD:*` géré par `core/skills.py`).
-- **Deux interfaces** — console (fonctionne sans tkinter) et GUI Tkinter.
-- **Mode debug** — `--debug` affiche chaque étape de décision : matches
+- **Deux interfaces** · console (fonctionne sans tkinter) et GUI Tkinter.
+- **Mode debug** · `--debug` affiche chaque étape de décision : matches
   flous, chargements mémoire, faits.
 
 ## 🖼 À quoi ça ressemble
 
-Fenêtre Tkinter réelle, capturée pendant une vraie session — le calcul
+Fenêtre Tkinter réelle, capturée pendant une vraie session · le calcul
 «1550 + 12500» et le nom retenu sont des réponses en direct :
 
 <p align="center">
@@ -107,9 +107,9 @@ Chaque push exécute une **CI sur 3 versions (Python 3.10 → 3.12)** qui :
 
 ## 📜 Historique des versions
 
-- **1.0.0** — moteur de règles, fuzzy matching, mémoire persistante,
+- **1.0.0** · moteur de règles, fuzzy matching, mémoire persistante,
   apprentissage par feedback, faits, réflexion, recherche web, GUI.
-- **1.1.0** — passe de fiabilité : correction du moteur de réflexion qui
+- **1.1.0** · passe de fiabilité : correction du moteur de réflexion qui
   comparait un échange à lui-même, du routage de recherche web jamais
   déclenché, d'un DoS `eval()` dans la calculatrice, de la dépendance
   dure à tkinter et des chemins relatifs au CWD.
@@ -126,9 +126,9 @@ Chaque push exécute une **CI sur 3 versions (Python 3.10 → 3.12)** qui :
 
 ## 🤝 Contribuer
 
-Issues et PRs bienvenues — voir [CONTRIBUTING.md](CONTRIBUTING.md).
+Issues et PRs bienvenues · voir [CONTRIBUTING.md](CONTRIBUTING.md).
 Des templates sont fournis pour les bugs, les idées et les pull requests.
 
 ## ⚖️ Licence
 
-[MIT](LICENSE) — © 2026 Mr Jackson.
+[MIT](LICENSE) · © 2026 Mr Jackson.

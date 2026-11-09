@@ -1,6 +1,6 @@
 <!--
 Merci pour votre PR ! Avant de soumettre :
-- [ ] J'ai testé en console (`python main.py`) — et en GUI si l'interface est touchée
+- [ ] J'ai testé en console (`python main.py`) · et en GUI si l'interface est touchée
 - [ ] `python -m flake8 . --count --select=E9,F63,F7,F82` passe
 - [ ] Aucun contenu de `data/*.json` personnel n'est commité
 -->
