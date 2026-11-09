@@ -9,7 +9,7 @@ feedback loop — no LLM, no machine learning model, no cloud. It learns
 exclusively from the conversations you have with it and runs **100% on your
 machine**.
 
-[![CI (Python 3.10 → 3.12)](https://github.com/bindedouworker-hub/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/bindedouworker-hub/IA/actions/workflows/python-package.yml)
+[![CI (Python 3.10 → 3.12)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 
@@ -53,7 +53,7 @@ calculation and the remembered name are live answers:
 ## 🚀 Getting started
 
 ```bash
-git clone https://github.com/bindedouworker-hub/IA.git
+git clone https://github.com/Mr-Jacks0n/IA.git
 cd IA
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt        # requests is the only dependency

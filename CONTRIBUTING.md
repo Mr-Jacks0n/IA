@@ -8,7 +8,7 @@ contributions sont bienvenues.
 ## Pour commencer
 
 ```bash
-git clone https://github.com/bindedouworker-hub/IA.git
+git clone https://github.com/Mr-Jacks0n/IA.git
 cd IA
 python -m venv .venv
 source .venv/bin/activate

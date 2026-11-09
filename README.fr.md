@@ -10,7 +10,7 @@ d'apprentissage automatique, aucun cloud. Elle apprend exclusivement des
 conversations que vous avez avec elle et fonctionne **100 % sur votre
 machine**.
 
-[![CI (Python 3.10 → 3.12)](https://github.com/bindedouworker-hub/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/bindedouworker-hub/IA/actions/workflows/python-package.yml)
+[![CI (Python 3.10 → 3.12)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 
@@ -56,7 +56,7 @@ Fenêtre Tkinter réelle, capturée pendant une vraie session — le calcul
 ## 🚀 Démarrage
 
 ```bash
-git clone https://github.com/bindedouworker-hub/IA.git
+git clone https://github.com/Mr-Jacks0n/IA.git
 cd IA
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt        # requests est la seule dépendance
