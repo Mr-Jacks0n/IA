@@ -15,7 +15,9 @@ source .venv/bin/activate
 pip install -r requirements.txt
 python main.py            # mode console
 python main.py --gui      # mode graphique (nécessite python3-tk)
-python main.py --debug    # console + logs de décision
+python main.py --debug    # console + logs de décision (trace de routage)
+python main.py --stats    # état mémoire + résumé du catalogue
+python main.py --audit    # auto-audit de sécurité (rapport data/findings.json)
 ```
 
 Serveur Linux sans interface graphique ? La console fonctionne sans
@@ -27,10 +29,19 @@ tkinter · c'est voulu (voir le changelog 1.1.0).
   Les fichiers `data/*.json` contiennent ce qu'ARIA a appris de
   *vous* : validez toujours `git status` et le contenu de `data/`
   avant de committer.
+- **La discipline de mémoire n'est pas négociable.** Toute écriture
+  de fait ou de règle passe par le filtre anti-secrets
+  (`core/catalog.py` · `contains_secret`) : n'ajoutez pas de
+  contournement, ni dans `core/memory.py` ni dans les compétences.
 - **Restez symbolique.** Pas d'intégration d'API LLM dans le moteur
   principal ; les idées doivent tenir dans le paradigme règles +
   mémoire + feedback. Les compétences réseau existantes
   (`core/skills.py`) sont le seul endroit où du externe est accepté.
+- **Nouvelles compétences = déclaratives.** Ajoutez un dossier
+  `skills/<nom>/SKILL.md` (frontmatter `name · description · risk ·
+  command · triggers`) puis câblez la commande dans
+  `core/skills.py` (`SKILL_MAP`). Le nom du dossier doit être
+  égal au `name` du frontmatter · sinon la compétence est rejetée.
 - **Style** : Python standard, docstrings courtes en français,
   pas de dépendance supplémentaire sans discussion dans une issue.
 - **Lint** : la CI applique flake8 (syntaxe et noms non définis).
@@ -53,8 +64,12 @@ tkinter · c'est voulu (voir le changelog 1.1.0).
 ## Bonnes premières contributions
 
 - Ajouter des règles par défaut utiles à `core/rules.py`.
+- Écrire une nouvelle compétence déclarative
+  (`skills/<nom>/SKILL.md` + câblage `SKILL_MAP`).
 - Améliorer le fuzzy matching (cutoff, normalisation des accents).
 - Étendre la réflexion de `core/reflection.py` (aujourd'hui 4 cas).
+- Renforcer l'auto-audit (`core/selfaudit.py`) : nouveaux motifs de
+  chasse, phases de validation plus strictes.
 - Lire/écrire les faits de raisonnement de façon plus riche
   (`je m'appelle X` → âge ? ville ? goûts ?).
 
