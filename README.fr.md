@@ -4,7 +4,7 @@
 
 # ARIA · Intelligence Apprenante Locale
 
-ARIA est une IA **symbolique et adaptative** · version **1.3.0** : un
+ARIA est une IA **symbolique et adaptative** · version **1.3.1** : un
 catalogue déclaratif de **14 compétences**, un routeur d'intents à
 preuve, un moteur de règles, une mémoire disciplinée et un auto-audit
 de sécurité · aucun LLM, aucun modèle d'apprentissage automatique,
@@ -171,6 +171,10 @@ Chaque push exécute une **CI sur 3 versions (Python 3.10 → 3.12)** qui :
   texte, aperçu CSV, conversions d'unités, heures du monde,
   calendrier, valeurs aléatoires locales ; réflexion sur sa propre
   ligne pour les réponses multi-lignes.
+- **1.3.1** · passe interfaces : bannière de marque console + commandes
+  `aide`/`stats`/`audit` (traces de routage en `--debug` seulement),
+  GUI remise au style de marque (couleurs, barre d'état du routage,
+  effacement de discussion).
   Voir [CHANGELOG.md](CHANGELOG.md).
 
 ## 🗺 Feuille de route

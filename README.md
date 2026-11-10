@@ -4,7 +4,7 @@
 
 # ARIA · Local Learnable Intelligence
 
-ARIA is a **symbolic, adaptive AI** · version **1.3.0**: a declarative
+ARIA is a **symbolic, adaptive AI** · version **1.3.1**: a declarative
 catalog of **14 skills**, an intent router with proof, a rule engine, a
 disciplined memory and a security self-audit · no LLM, no machine
 learning model, no cloud. It learns exclusively from the conversations
@@ -163,7 +163,11 @@ Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
 - **1.3.0** · catalog grew to **14 skills**: task list, change journal,
   charter inspector, text statistics, CSV preview, unit conversions,
   world clock, calendar, local random values; reflection on its own
-  line for multi-line answers. See [CHANGELOG.md](CHANGELOG.md).
+  line for multi-line answers.
+- **1.3.1** · interface pass: branded console banner + integrated
+  `aide`/`stats`/`audit` commands (routing traces only in `--debug`),
+  GUI restyled to the brand (colors, routing status bar, chat
+  clearing). See [CHANGELOG.md](CHANGELOG.md).
 
 ## 🗺 Roadmap
 

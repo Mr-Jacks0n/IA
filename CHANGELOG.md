@@ -2,6 +2,21 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [1.3.1] · 2026-11
+
+### Changed · interfaces
+- **Console** : bannière de marque (version, compteur de compétences,
+  mémoire), commandes intégrées `aide` · `stats` · `audit`, messages
+  « ARIA : » or de marque sur un terminal réel (ANSI), traces de
+  routage (`⤷ [route: …]`) réservées au `--debug` · la session scriptée
+  CI reste inchangée (les 4 réponses attendues, greps identiques).
+- **GUI** : barre de marque or (`#bc9c22`) portant la version et
+  « mémoire locale · aucun cloud », zone de chat sombre avec émetteurs
+  colorés, barre d'état montrant la route gagnante du dernier tour,
+  bouton « Effacer la discussion », géométrie minimale imposée, focus
+  de saisie automatique, fenêtres de correction rattachées
+  (`transient`), `MemoryRefused` géré.
+
 ## [1.3.0] · 2026-11
 
 ### Added
