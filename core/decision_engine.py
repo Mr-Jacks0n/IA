@@ -45,7 +45,10 @@ class DecisionEngine:
         self._record(user_input, response)
         reflechie = self.reflection.reflect(user_input, response)
         if reflechie:
-            response += " " + reflechie
+            if "\n" in response:
+                response += "\n💬 " + reflechie
+            else:
+                response += " 💬 " + reflechie
         return response, winner.name, self.last_trace
 
     def find_best_match(self, user_input):

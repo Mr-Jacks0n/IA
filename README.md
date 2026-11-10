@@ -4,11 +4,11 @@
 
 # ARIA · Local Learnable Intelligence
 
-ARIA is a **symbolic, adaptive AI** · version **1.2.0**: a declarative
-skill catalog, an intent router with proof, a rule engine, a disciplined
-memory and a security self-audit · no LLM, no machine learning model, no
-cloud. It learns exclusively from the conversations you have with it and
-runs **100% on your machine**.
+ARIA is a **symbolic, adaptive AI** · version **1.3.0**: a declarative
+catalog of **14 skills**, an intent router with proof, a rule engine, a
+disciplined memory and a security self-audit · no LLM, no machine
+learning model, no cloud. It learns exclusively from the conversations
+you have with it and runs **100% on your machine**.
 
 [![CI (Python 3.10 → 3.12)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -22,7 +22,19 @@ runs **100% on your machine**.
 - **Declarative skill catalog** · every skill is a `skills/<name>/SKILL.md`
   folder with frontmatter (`name · description · risk · command ·
   triggers`): declaring it is enough to make it routable, the catalog
-  validates consistency and lists invalid declarations.
+  validates consistency and lists invalid declarations. Shipped (14):
+  · utilities: date/time, current-month calendar (today marked), unit
+    converter (km/mi, m/ft, kg/lb, °C/°F, Mo/Go), world clock
+    (zoneinfo, no network);
+  · project & docs: local task list (add / list / complete), change
+    journal draft built from local git history, session report;
+  · review & analysis: charter inspector (em-dashes, artifacts,
+    credential literals · positions only, never the content), text
+    statistics, CSV preview;
+  · search & math: DuckDuckGo web search, calculator (safe AST
+    evaluator);
+  · local randomness: value generator (`secrets` module, displayed ·
+    NEVER stored), draws (dice, coin flip, 1 to 100).
 - **Intent router with proof** · skills, logic and learned rules are all
   candidate routes with a confidence score; only the winner runs (lazy)
   and the choice is traceable
@@ -96,11 +108,11 @@ an actionable install hint (`sudo apt install python3-tk`) if Tk is absent.
 .
 ├── main.py                    # entry point: console | --gui | --debug | --audit | --stats
 ├── config.py                  # DEBUG_MODE + debug_print helper
-├── skills/                    # declarative skills (SKILL.md frontmatter)
-│   ├── annonce-date/
-│   ├── calculatrice-sure/
-│   ├── recherche-web/
-│   └── rapport-session/
+├── skills/                    # 14 declarative skills (SKILL.md)
+│   ├── annonce-date/ · rapport-session/ · calculatrice-sure/ · recherche-web/
+│   ├── gestion-taches/ · journal-changements/ · inspecteur-charte/
+│   ├── analyse-texte/ · apercu-csv/ · convertisseur-unites/
+│   └── fuseaux-horaires/ · calendrier-mois/ · generateur-jetons/ · tirage-hasard/
 ├── core/
 │   ├── decision_engine.py     # pipeline: winning route → execution → verification
 │   ├── router.py              # candidate routes, scores, routing proof
@@ -129,7 +141,8 @@ Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
    calculation → name memorization → recall → date command → clean exit)
    and asserts the exact expected answers,
 3. runs the **security self-audit** (`python main.py --audit`) and
-   validates `data/findings.json` (confirmed/rejected fields),
+   validates `data/findings.json` (confirmed/rejected fields) · the
+   catalog must load **14 skills, 0 invalid**,
 4. launches ARIA from an unrelated working directory to guarantee the
    data paths are anchored to the project root,
 5. fails if any `__pycache__/*.pyc` sneaks back into the index.
@@ -146,7 +159,11 @@ Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
   (`skills/*/SKILL.md`), intent router with proof, memory discipline
   (no secrets ever, bounds, honored erasure), output masking and a
   security self-audit (`--audit`), `--stats` command, hardened console
-  and GUI. See [CHANGELOG.md](CHANGELOG.md).
+  and GUI.
+- **1.3.0** · catalog grew to **14 skills**: task list, change journal,
+  charter inspector, text statistics, CSV preview, unit conversions,
+  world clock, calendar, local random values; reflection on its own
+  line for multi-line answers. See [CHANGELOG.md](CHANGELOG.md).
 
 ## 🗺 Roadmap
 

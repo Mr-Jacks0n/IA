@@ -4,12 +4,12 @@
 
 # ARIA · Intelligence Apprenante Locale
 
-ARIA est une IA **symbolique et adaptative** · version **1.2.0** : un
-catalogue déclaratif de compétences, un routeur d'intents à preuve, un
-moteur de règles, une mémoire disciplinée et un auto-audit de sécurité ·
-aucun LLM, aucun modèle d'apprentissage automatique, aucun cloud. Elle
-apprend exclusivement des conversations que vous avez avec elle et
-fonctionne **100 % sur votre machine**.
+ARIA est une IA **symbolique et adaptative** · version **1.3.0** : un
+catalogue déclaratif de **14 compétences**, un routeur d'intents à
+preuve, un moteur de règles, une mémoire disciplinée et un auto-audit
+de sécurité · aucun LLM, aucun modèle d'apprentissage automatique,
+aucun cloud. Elle apprend exclusivement des conversations que vous
+avez avec elle et fonctionne **100 % sur votre machine**.
 
 [![CI (Python 3.10 → 3.12)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -24,7 +24,20 @@ fonctionne **100 % sur votre machine**.
   dossier `skills/<nom>/SKILL.md` avec frontmatter
   (`name · description · risk · command · triggers`) : la déclarer
   suffit à la rendre routable, le catalogue valide la cohérence et liste
-  les déclarations invalides.
+  les déclarations invalides. Livrées (14) :
+  · utilitaires : date/heure, calendrier du mois (jour marqué),
+    convertisseur d'unités (km/mi, m/ft, kg/lb, °C/°F, Mo/Go),
+    heures du monde (zoneinfo, pas de réseau) ;
+  · gestion & documentation : liste de tâches locale (ajouter /
+    lister / terminer), ébauche de journal des changements depuis
+    l'historique git, bilan de session ;
+  · révision & analyse : inspecteur de charte (tirets cadratins,
+    artefacts, littéraux d'identifiant · positions seulement, jamais
+    le contenu), statistiques de texte, aperçu CSV ;
+  · recherche & calcul : recherche web DuckDuckGo, calculatrice
+    (évaluateur AST sécurisé) ;
+  · valeurs aléatoires locales : générateur (module `secrets`,
+    valeurs affichées · JAMAIS stockées), tirages (dé, pièce, 1 à 100).
 - **Routeur d'intents à preuve** · compétences, logique et règles
   apprises sont des routes candidates avec un score de confiance ; la
   meilleure seule est exécutée (lazy) et le choix est traçable
@@ -101,11 +114,11 @@ si Tk est absent.
 .
 ├── main.py                    # point d'entrée : console | --gui | --debug | --audit | --stats
 ├── config.py                  # DEBUG_MODE + utilitaire debug_print
-├── skills/                    # compétences déclaratives (frontmatter SKILL.md)
-│   ├── annonce-date/
-│   ├── calculatrice-sure/
-│   ├── recherche-web/
-│   └── rapport-session/
+├── skills/                    # 14 compétences déclaratives (SKILL.md)
+│   ├── annonce-date/ · rapport-session/ · calculatrice-sure/ · recherche-web/
+│   ├── gestion-taches/ · journal-changements/ · inspecteur-charte/
+│   ├── analyse-texte/ · apercu-csv/ · convertisseur-unites/
+│   └── fuseaux-horaires/ · calendrier-mois/ · generateur-jetons/ · tirage-hasard/
 ├── core/
 │   ├── decision_engine.py     # pipeline : route gagnante → exécution → vérification
 │   ├── router.py              # routes candidates, scores, preuve de routage
@@ -134,7 +147,8 @@ Chaque push exécute une **CI sur 3 versions (Python 3.10 → 3.12)** qui :
    d'apprentissage → calcul → mémorisation du nom → rappel → commande
    date → sortie propre) et vérifie les réponses exactes attendues,
 3. lance l'**auto-audit de sécurité** (`python main.py --audit`) et
-   valide `data/findings.json` (champs confirmed/rejected),
+   valide `data/findings.json` (champs confirmed/rejected) · le
+   catalogue doit charger **14 compétences, 0 invalide**,
 4. lance ARIA depuis un autre répertoire courant pour garantir que les
    chemins de `data/` sont ancrés à la racine du projet,
 5. échoue si un `__pycache__/*.pyc` se glisse à nouveau dans l'index.
@@ -152,6 +166,11 @@ Chaque push exécute une **CI sur 3 versions (Python 3.10 → 3.12)** qui :
   discipline de mémoire (jamais de secrets, bornes, effacement honoré),
   masquage en sortie et auto-audit de sécurité (`--audit`), commande
   `--stats`, console et GUI durcies.
+- **1.3.0** · catalogue élargi à **14 compétences** : gestion de tâches,
+  journal des changements, inspecteur de charte, statistiques de
+  texte, aperçu CSV, conversions d'unités, heures du monde,
+  calendrier, valeurs aléatoires locales ; réflexion sur sa propre
+  ligne pour les réponses multi-lignes.
   Voir [CHANGELOG.md](CHANGELOG.md).
 
 ## 🗺 Feuille de route

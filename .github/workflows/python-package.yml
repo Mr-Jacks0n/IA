@@ -31,7 +31,7 @@ jobs:
     - name: Lint bloquant (syntaxe et noms non définis)
       run: flake8 . --exclude=.venv --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    - name: Smoke test — session console scriptée
+    - name: Smoke test · session console scriptée
       run: |
         # Session complète : accueil + feedback d'apprentissage, calcul
         # automatique, mémorisation du nom, rappel du nom, commande date,
@@ -60,6 +60,9 @@ jobs:
         python -c "import json,sys; d=json.load(open('data/findings.json')); \
           assert 'confirmed' in d and 'rejected' in d; \
           print('findings.json valide')"
+        python main.py --stats | tee stats_session.txt
+        grep -q "14 compétences" stats_session.txt
+        grep -q "0 invalides" stats_session.txt
         rm -f data/findings.json
 
     - name: Vérifier qu'aucun __pycache__ n'est versionné

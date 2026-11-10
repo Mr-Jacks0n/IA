@@ -168,14 +168,15 @@ def _search_facts(memory):
 
 
 def _run_skill(decl, text, memory, skillset):
-    from core.skills import SKILL_MAP   # import tardif, évite un cycle
+    from core.skills import SKILL_MAP, NEEDS_TEXT, NEEDS_MEMORY
     method_name = SKILL_MAP.get(decl.command, '')
     method = getattr(skillset, method_name, None)
     if method is None:
         return "Cette compétence n'est pas encore câblée."
-    # signature spéciale : le rapport de session a besoin de la mémoire
-    if method_name == 'session_report':
+    if decl.command in NEEDS_MEMORY:
         return method(memory)
+    if decl.command in NEEDS_TEXT:
+        return method(text)
     return method()
 
 

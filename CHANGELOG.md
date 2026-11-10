@@ -2,6 +2,34 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [1.3.0] · 2026-11
+
+### Added
+- **Catalogue élargi à 14 compétences déclaratives** (de 4) · les
+  catégories couvertes rejoignent le quotidien :
+  · gestion : `gestion-taches` (liste locale persistée, ajouter /
+    lister / terminer) ;
+  · documentation : `journal-changements` (ébauche de journal depuis
+    l'historique git local, révisable) ;
+  · révision : `inspecteur-charte` (scan d'un fichier : tirets
+    cadratins, artefacts, littéraux d'identifiant · positions
+    seulement, jamais le contenu) ;
+  · analyse : `analyse-texte` (mots, uniques, phrases, fréquences),
+    `apercu-csv` (colonnes, entête, premières lignes) ;
+  · utilities : `convertisseur-unites` (km/mi, m/ft, kg/lb, °C/°F,
+    Mo/Go), `fuseaux-horaires` (zoneinfo, 8 villes), `calendrier-mois`
+    (grille du mois, jour marqué) ;
+  · éléments aléatoires locaux : `generateur-jetons` (module
+    `secrets`, affichés · JAMAIS stockés ni mémorisés),
+    `tirage-hasard` (dé N faces, pile ou face, 1 à 100).
+- Compétences à entrée : le routeur transmet le texte utilisateur aux
+  compétences qui l'attendent (`NEEDS_TEXT`), et la mémoire au bilan
+  (`NEEDS_MEMORY`).
+- Réflexion : les observations suivent leur propre ligne (« 💬 »)
+  pour les réponses multi-lignes.
+- CI : le smoke vérifie en plus que le catalogue charge 14
+  compétences avec 0 invalide.
+
 ## [1.2.0] · 2026-11
 
 ### Added
