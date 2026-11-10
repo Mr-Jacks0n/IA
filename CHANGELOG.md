@@ -2,6 +2,45 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 
+## [1.2.0] · 2026-11
+
+### Added
+- **Catalogue déclaratif de compétences** (`skills/*/SKILL.md`,
+  `core/catalog.py`) : chaque compétence vit dans un fichier avec
+  frontmatter `name / description / category / risk (none·safe·critical) /
+  command / triggers` (déclencheurs explicites). Le catalogue valide la
+  cohérence nom-de-dossier, la taille de description, le niveau de risque ·
+  les compétences invalides sont listées pour l'audit, jamais chargées.
+- **Routeur d'intents à preuve** (`core/router.py`, `core/decision_engine.py`,
+  rewire) : les compétences, les heuristiques de raisonnement et les règles
+  apprises sont toutes des routes candidates avec un score de confiance ; la
+  meilleure route seule est exécutée (lazy), et son choix est traçable
+  (`[route: … · risque: … · confiance: …]`, affiché en console, debug possible).
+- **Discipline de mémoire** (`core/memory.py`) : jamais un secret en
+  mémoire (filtre sur `save_fact` ET `add_rule` · refus explicite), bornes
+  d'hygiène (200 faits / 500 règles), toute demande d'effacement explicite
+  (« oublie … ») est honorée sans copie cachée, retrieval flou des faits,
+  compaction de session (`remember_session`) avec archives de sujets.
+- **Masquage en sortie** (`core/decision_engine.py`) : toute valeur
+  sensible qui serait renvoyée est masquée ligne à ligne (défense en
+  profondeur, au cas où une règle héritée d'une ancienne version en
+  contienne une).
+- **Auto-audit de sécurité** (`core/selfaudit.py`, `python main.py --audit`)
+  : six phases hors ligne · reconnaissance de surface, chasse guidée
+  (secrets dans `data/`, appels `eval()/exec()/__import__()`), validation
+  reproductible de chaque candidat, sortie structurée `data/findings.json`
+  (confirmed / rejected), relecture indépendante de la source, rapport
+  neutre. Ajouté comme étape de CI (breakage-détection continue).
+- `python main.py --stats` : état mémoire + résumé du catalogue.
+- Console : EOF propre (^D) sans traceback, prompt de correction gère le
+  refus de discipline (message, pas un crash).
+
+### Changed
+- L'apprentissage visible (`Réponse correcte ?`) ne concerne plus que les
+  routes « règles apprises » et les inconnues · les réponses de
+  compétences dédiées (date, calcul, bilan, garde) ne polluent plus la
+  base de règles avec des doublons.
+
 ## [1.1.0] · 2026-11
 
 ### Fixed

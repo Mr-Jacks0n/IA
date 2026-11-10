@@ -4,11 +4,12 @@
 
 # ARIA · Intelligence Apprenante Locale
 
-ARIA est une IA **symbolique et adaptative** : un moteur de règles, une
-mémoire persistante et une boucle de feedback · aucun LLM, aucun modèle
-d'apprentissage automatique, aucun cloud. Elle apprend exclusivement des
-conversations que vous avez avec elle et fonctionne **100 % sur votre
-machine**.
+ARIA est une IA **symbolique et adaptative** · version **1.2.0** : un
+catalogue déclaratif de compétences, un routeur d'intents à preuve, un
+moteur de règles, une mémoire disciplinée et un auto-audit de sécurité ·
+aucun LLM, aucun modèle d'apprentissage automatique, aucun cloud. Elle
+apprend exclusivement des conversations que vous avez avec elle et
+fonctionne **100 % sur votre machine**.
 
 [![CI (Python 3.10 → 3.12)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -19,9 +20,29 @@ machine**.
 
 ## ✨ Fonctionnalités
 
+- **Catalogue déclaratif de compétences** · chaque compétence est un
+  dossier `skills/<nom>/SKILL.md` avec frontmatter
+  (`name · description · risk · command · triggers`) : la déclarer
+  suffit à la rendre routable, le catalogue valide la cohérence et liste
+  les déclarations invalides.
+- **Routeur d'intents à preuve** · compétences, logique et règles
+  apprises sont des routes candidates avec un score de confiance ; la
+  meilleure seule est exécutée (lazy) et le choix est traçable
+  (`[route: … · risque: … · confiance: … · source: …]`).
 - **Apprentissage par règles IF/THEN** · les réponses sont comparées aux
   règles apprises ; chaque entrée inconnue est une occasion d'apprendre
-  (`Réponse correcte ?` → nouvelle règle écrite sur disque).
+  (`Réponse correcte ?` → nouvelle règle écrite sur disque). Le feedback
+  ne concerne que les règles apprises : pas de doublon trompeur.
+- **Discipline de mémoire** · jamais de secret stocké (filtre sur
+  l'écriture de faits ET de règles, refus explicite), bornes d'hygiène
+  (200 faits · 500 règles), toute demande d'effacement (« oublie … »)
+  est honorée sans copie cachée, compaction de session avec archives.
+- **Masquage en sortie** · toute valeur sensible qui serait renvoyée est
+  masquée ligne à ligne (défense en profondeur).
+- **Auto-audit de sécurité** · `python main.py --audit` : six phases
+  hors ligne (reconnaissance → chasse guidée → validation reproductible
+  → `data/findings.json` → relecture indépendante → rapport neutre) qui
+  traque secrets en `data/` et appels dangereux.
 - **Mémoire persistante** · règles, faits, expériences et contexte sont des
   fichiers JSON lisibles et éditables à la main dans `data/`.
 - **Compréhension floue** · `difflib.get_close_matches` rattache les
@@ -38,11 +59,12 @@ machine**.
 - **Réflexion** · une mémoire courte terme des derniers échanges donne à
   ARIA des auto-observations : elle signale les réponses inconnues,
   remarque les sujets répétés et pose des questions de relance.
-- **Commandes spéciales** · heure/date, ouvrir le navigateur, recherche
-  web (mappage `CMD:*` géré par `core/skills.py`).
+- **Commandes spéciales** · heure/date, ouvrir le navigateur, bilan de
+  session, recherche web (mappage `CMD:*` géré par `core/skills.py`).
 - **Deux interfaces** · console (fonctionne sans tkinter) et GUI Tkinter.
-- **Mode debug** · `--debug` affiche chaque étape de décision : matches
-  flous, chargements mémoire, faits.
+- **Modes diagnostic** · `--debug` (trace de décision, matches flous,
+  faits), `--stats` (état mémoire + résumé du catalogue),
+  `--audit` (auto-audit de sécurité).
 
 ## 🖼 À quoi ça ressemble
 
@@ -64,6 +86,8 @@ pip install -r requirements.txt        # requests est la seule dépendance
 python main.py          # mode console
 python main.py --gui    # mode graphique (nécessite python3-tk)
 python main.py --debug  # console + logs de décision
+python main.py --stats  # état mémoire + résumé du catalogue
+python main.py --audit  # auto-audit de sécurité (rapport data/findings.json)
 python utils/clean_data.py   # normalise les clés de règles en minuscules
 ```
 
@@ -75,18 +99,26 @@ si Tk est absent.
 
 ```
 .
-├── main.py                    # point d'entrée : console | --gui | --debug
+├── main.py                    # point d'entrée : console | --gui | --debug | --audit | --stats
 ├── config.py                  # DEBUG_MODE + utilitaire debug_print
+├── skills/                    # compétences déclaratives (frontmatter SKILL.md)
+│   ├── annonce-date/
+│   ├── calculatrice-sure/
+│   ├── recherche-web/
+│   └── rapport-session/
 ├── core/
-│   ├── decision_engine.py     # routage : raisonnement → logique → règles → inconnu
+│   ├── decision_engine.py     # pipeline : route gagnante → exécution → vérification
+│   ├── router.py              # routes candidates, scores, preuve de routage
+│   ├── catalog.py             # parser/frontmatter + validation + garde secrets
 │   ├── rules.py               # DEFAULT_RULES (règles initiales)
-│   ├── memory.py              # mémoire JSON persistante (règles/faits/contexte)
+│   ├── memory.py              # mémoire JSON disciplinée (règles/faits/contexte)
 │   ├── reflection.py          # mémoire courte terme + auto-observations
-│   └── skills.py              # date, calculatrice (AST sûr), recherche web, navigateur
+│   ├── selfaudit.py           # auto-audit de sécurité (6 phases, hors ligne)
+│   └── skills.py              # date, calcul (AST sûr), recherche web, navigateur, bilan
 ├── interface/
-│   ├── console.py             # REPL + boucle de feedback oui/non
+│   ├── console.py             # REPL + boucle de feedback oui/non (EOF propre)
 │   └── gui.py                 # fenêtre de chat Tkinter
-├── learning/feedback.py       # learn(règle) → Memory.add_rule
+├── learning/feedback.py       # learn(règle) → Memory.add_rule (MemoryRefused si secret)
 ├── utils/clean_data.py        # normalise les clés de règles
 ├── data/*.json                # état persistant (valeurs par défaut fournies)
 ├── docs/                      # bannière + capture GUI réelle
@@ -97,13 +129,15 @@ si Tk est absent.
 
 Chaque push exécute une **CI sur 3 versions (Python 3.10 → 3.12)** qui :
 
-1. lint le code (flake8, bloquant),
+1. lint le code (flake8 `E9/F63/F7/F82`, bloquant),
 2. lance une **session console scriptée** (accueil → confirmation
    d'apprentissage → calcul → mémorisation du nom → rappel → commande
    date → sortie propre) et vérifie les réponses exactes attendues,
-3. lance ARIA depuis un autre répertoire courant pour garantir que les
+3. lance l'**auto-audit de sécurité** (`python main.py --audit`) et
+   valide `data/findings.json` (champs confirmed/rejected),
+4. lance ARIA depuis un autre répertoire courant pour garantir que les
    chemins de `data/` sont ancrés à la racine du projet,
-4. échoue si un `__pycache__/*.pyc` se glisse à nouveau dans l'index.
+5. échoue si un `__pycache__/*.pyc` se glisse à nouveau dans l'index.
 
 ## 📜 Historique des versions
 
@@ -113,6 +147,11 @@ Chaque push exécute une **CI sur 3 versions (Python 3.10 → 3.12)** qui :
   comparait un échange à lui-même, du routage de recherche web jamais
   déclenché, d'un DoS `eval()` dans la calculatrice, de la dépendance
   dure à tkinter et des chemins relatifs au CWD.
+- **1.2.0** · passage en architecture déclarative : catalogue de
+  compétences (`skills/*/SKILL.md`), routeur d'intents à preuve,
+  discipline de mémoire (jamais de secrets, bornes, effacement honoré),
+  masquage en sortie et auto-audit de sécurité (`--audit`), commande
+  `--stats`, console et GUI durcies.
   Voir [CHANGELOG.md](CHANGELOG.md).
 
 ## 🗺 Feuille de route
@@ -122,6 +161,8 @@ Chaque push exécute une **CI sur 3 versions (Python 3.10 → 3.12)** qui :
 - [ ] Apprentissage multi-réponses : garder plusieurs candidats par règle
 - [ ] Normalisation des accents avant le fuzzy matching
 - [ ] Export/import de la mémoire en « kit de connaissances » partageable
+- [ ] Compétences à risque `critical` : confirmation explicite avant
+      exécution
 - [ ] Entrée vocale via `speech_recognition` (dépendance optionnelle)
 
 ## 🤝 Contribuer

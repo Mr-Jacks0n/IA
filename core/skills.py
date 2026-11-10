@@ -95,10 +95,41 @@ class SkillSet:
         except Exception as e:
             return f"Erreur lors de l'ouverture du navigateur : {str(e)}"
 
+    def session_report(self, memory):
+        """Rapport de session : faits + rules, valeurs sensibles masquées.
+
+        Défense en profondeur : même si une valeur sensible a échappé
+        au filtre d'écriture (versione antérieure), elle est masquée à
+        la sortie. Le secret n'est jamais recité.
+        """
+        from core.catalog import contains_secret
+        facts = memory.facts
+        lines = [f"📋 Bilan de session : {len(facts)} fait(s), "
+                 f"{len(memory.rules)} règle(s) en mémoire."]
+        if facts:
+            shown = []
+            for k, v in list(facts.items())[:5]:
+                val = str(v)
+                display = "(masqué : valeur sensible)" \
+                    if contains_secret(k + " " + val) else val
+                shown.append(f"{k}: {display}")
+            lines.append("Faits récents : " + " · ".join(shown))
+        learned = [q for q, a in memory.rules.items()
+                   if not str(a).startswith("CMD:")]
+        if learned:
+            lines.append("Règles récentes : " +
+                         " · ".join(learned[:3]) +
+                         ("…" if len(learned) > 3 else ""))
+        lines.append("Discipline : les secrets ne sont jamais stockés ;")
+        lines.append("toute demande d'effacement est honorée.")
+        return "\n".join(lines)
+
 # Dictionnaire de mappage pour lier les textes aux fonctions
 SKILL_MAP = {
     "CMD:date": "get_date",
     "CMD:meteo": "get_weather",
     "CMD:calc": "calculate",
-    "CMD:search": "search_web"
+    "CMD:search": "search_web",
+    "CMD:open_browser": "open_browser",
+    "CMD:session_report": "session_report",
 }

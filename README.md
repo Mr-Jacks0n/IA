@@ -4,10 +4,11 @@
 
 # ARIA · Local Learnable Intelligence
 
-ARIA is a **symbolic, adaptive AI**: a rule engine, a persistent memory and a
-feedback loop · no LLM, no machine learning model, no cloud. It learns
-exclusively from the conversations you have with it and runs **100% on your
-machine**.
+ARIA is a **symbolic, adaptive AI** · version **1.2.0**: a declarative
+skill catalog, an intent router with proof, a rule engine, a disciplined
+memory and a security self-audit · no LLM, no machine learning model, no
+cloud. It learns exclusively from the conversations you have with it and
+runs **100% on your machine**.
 
 [![CI (Python 3.10 → 3.12)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml/badge.svg)](https://github.com/Mr-Jacks0n/IA/actions/workflows/python-package.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -18,9 +19,28 @@ machine**.
 
 ## ✨ Features
 
+- **Declarative skill catalog** · every skill is a `skills/<name>/SKILL.md`
+  folder with frontmatter (`name · description · risk · command ·
+  triggers`): declaring it is enough to make it routable, the catalog
+  validates consistency and lists invalid declarations.
+- **Intent router with proof** · skills, logic and learned rules are all
+  candidate routes with a confidence score; only the winner runs (lazy)
+  and the choice is traceable
+  (`[route: … · risk: … · confidence: … · source: …]`).
 - **IF/THEN rule learning** · answers are matched against learned rules;
   every unknown input is a teaching opportunity (`Réponse correcte ?` →
-  new rule written to disk).
+  new rule written to disk). Feedback only applies to learned rules: no
+  misleading duplicates.
+- **Memory discipline** · secrets are never stored (filter on BOTH fact
+  and rule writes, explicit refusal), hygiene bounds (200 facts · 500
+  rules), every erasure request ("oublie …") is honored without hidden
+  copies, session compaction with topic archives.
+- **Output masking** · any sensitive value that would be returned is
+  masked line by line (defense in depth).
+- **Security self-audit** · `python main.py --audit`: six offline phases
+  (surface survey → guided hunt → reproducible validation →
+  `data/findings.json` → independent re-read → neutral report) chasing
+  secrets in `data/` and dangerous calls.
 - **Persistent memory** · rules, facts, experiences and context are plain
   JSON files in `data/`, readable and editable by hand.
 - **Fuzzy understanding** · `difflib.get_close_matches` maps typos and
@@ -35,11 +55,12 @@ machine**.
 - **Reflection** · a short-term memory of the last exchanges gives ARIA
   self-observations: it flags unknown answers, notices repeated topics,
   asks follow-up questions.
-- **Special commands** · time/date, open browser, web search
-  (skill mapping `CMD:*` handled by `core/skills.py`).
+- **Special commands** · time/date, open browser, session report, web
+  search (skill mapping `CMD:*` handled by `core/skills.py`).
 - **Two interfaces** · console (works without tkinter) and Tkinter GUI.
-- **Debug mode** · `--debug` prints every decision step: fuzzy matches,
-  memory loads, facts.
+- **Diagnostic modes** · `--debug` (decision trace, fuzzy matches, facts),
+  `--stats` (memory state + catalog summary), `--audit` (security
+  self-audit).
 
 ## 🖼 What it looks like
 
@@ -61,6 +82,8 @@ pip install -r requirements.txt        # requests is the only dependency
 python main.py          # console mode
 python main.py --gui    # graphical mode (needs python3-tk)
 python main.py --debug  # console + decision logs
+python main.py --stats  # memory state + catalog summary
+python main.py --audit  # security self-audit (report data/findings.json)
 python utils/clean_data.py   # lowercase-normalize saved rules
 ```
 
@@ -71,18 +94,26 @@ an actionable install hint (`sudo apt install python3-tk`) if Tk is absent.
 
 ```
 .
-├── main.py                    # entry point: console | --gui | --debug
+├── main.py                    # entry point: console | --gui | --debug | --audit | --stats
 ├── config.py                  # DEBUG_MODE + debug_print helper
+├── skills/                    # declarative skills (SKILL.md frontmatter)
+│   ├── annonce-date/
+│   ├── calculatrice-sure/
+│   ├── recherche-web/
+│   └── rapport-session/
 ├── core/
-│   ├── decision_engine.py     # routing: reasoning → logic → rules → unknown
+│   ├── decision_engine.py     # pipeline: winning route → execution → verification
+│   ├── router.py              # candidate routes, scores, routing proof
+│   ├── catalog.py             # frontmatter parser + validation + secret guard
 │   ├── rules.py               # DEFAULT_RULES (seed rules)
-│   ├── memory.py              # persistent JSON memory (rules/facts/context)
+│   ├── memory.py              # disciplined JSON memory (rules/facts/context)
 │   ├── reflection.py          # short-term memory + self-observations
-│   └── skills.py              # date, calculator (AST-safe), web search, browser
+│   ├── selfaudit.py           # security self-audit (6 phases, offline)
+│   └── skills.py              # date, calculator (AST-safe), web search, browser, report
 ├── interface/
-│   ├── console.py             # REPL + oui/non feedback loop
+│   ├── console.py             # REPL + oui/non feedback loop (clean EOF)
 │   └── gui.py                 # Tkinter chat window
-├── learning/feedback.py       # learn(rule) → Memory.add_rule
+├── learning/feedback.py       # learn(rule) → Memory.add_rule (MemoryRefused on secrets)
 ├── utils/clean_data.py        # normalize saved rule keys
 ├── data/*.json                # persistent state (defaults shipped)
 ├── docs/                      # banner + real GUI screenshot
@@ -93,13 +124,15 @@ an actionable install hint (`sudo apt install python3-tk`) if Tk is absent.
 
 Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
 
-1. lints the codebase (flake8, blocking),
+1. lints the codebase (flake8 `E9/F63/F7/F82`, blocking),
 2. runs a **scripted console session** (greet → teach confirmation →
    calculation → name memorization → recall → date command → clean exit)
    and asserts the exact expected answers,
-3. launches ARIA from an unrelated working directory to guarantee the
+3. runs the **security self-audit** (`python main.py --audit`) and
+   validates `data/findings.json` (confirmed/rejected fields),
+4. launches ARIA from an unrelated working directory to guarantee the
    data paths are anchored to the project root,
-4. fails if any `__pycache__/*.pyc` sneaks back into the index.
+5. fails if any `__pycache__/*.pyc` sneaks back into the index.
 
 ## 📜 Version history
 
@@ -108,7 +141,12 @@ Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
 - **1.1.0** · reliability pass: fixed the reflection engine comparing an
   exchange with itself, the web-search routing that never fired, an
   `eval()` DoS in the calculator, the hard tkinter dependency, and
-  CWD-relative data paths. See [CHANGELOG.md](CHANGELOG.md).
+  CWD-relative data paths.
+- **1.2.0** · move to a declarative architecture: skill catalog
+  (`skills/*/SKILL.md`), intent router with proof, memory discipline
+  (no secrets ever, bounds, honored erasure), output masking and a
+  security self-audit (`--audit`), `--stats` command, hardened console
+  and GUI. See [CHANGELOG.md](CHANGELOG.md).
 
 ## 🗺 Roadmap
 
@@ -116,6 +154,7 @@ Every push runs a **3-version CI (Python 3.10 → 3.12)** that:
 - [ ] Multi-shot learning: keep several candidate answers per rule
 - [ ] Accent/diacritics normalization before fuzzy matching
 - [ ] Export/import of a memory as shareable "knowledge pack"
+- [ ] `critical`-risk skills: explicit confirmation before execution
 - [ ] Voice input via `speech_recognition` (optional extra)
 
 ## 🤝 Contributing

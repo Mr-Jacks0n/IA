@@ -52,6 +52,16 @@ jobs:
         grep -q "Tu t'appelles test" sortie_session.txt
         grep -q "Nous sommes le" sortie_session.txt
 
+    - name: Auto-audit de sécurité (hors ligne, déterministe)
+      run: |
+        python main.py --audit | tee audit_session.txt
+        grep -q "Audit de sécurité ARIA" audit_session.txt
+        grep -q "rapport : data/findings.json" audit_session.txt
+        python -c "import json,sys; d=json.load(open('data/findings.json')); \
+          assert 'confirmed' in d and 'rejected' in d; \
+          print('findings.json valide')"
+        rm -f data/findings.json
+
     - name: Vérifier qu'aucun __pycache__ n'est versionné
       run: |
         if git ls-files | grep -qE "pycache|\.pyc$"; then

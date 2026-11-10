@@ -46,8 +46,8 @@ class GUIApp:
         
         if response:
             self.display_message("ARIA", response)
-            # Feedback seulement pour les réponses apprises
-            if key not in ["logic_event", "advanced_reasoning"] and not response.startswith("Le résultat est"):
+            # Feedback seulement pour les règles apprises / inconnues
+            if key in ("rules.fuzzy", None):
                 self.ask_feedback(user_input)
         else:
             self.display_message("ARIA", "Je ne sais pas encore répondre à cela. Apprends-moi.")
@@ -76,8 +76,11 @@ class GUIApp:
             def submit():
                 correction = correction_entry.get().strip()
                 if correction:
-                    learn(self.memory, user_input.lower(), correction)
-                    self.display_message("ARIA", f"Merci ! J'ai appris : '{user_input}' -> '{correction}'")
+                    try:
+                        learn(self.memory, user_input.lower(), correction)
+                        self.display_message("ARIA", f"Merci ! J'ai appris : '{user_input}' -> '{correction}'")
+                    except Exception as exc:
+                        self.display_message("ARIA", f"⛔ Refusé : {exc}")
                 correction_window.destroy()
             
             tk.Button(correction_window, text="Apprendre", command=submit).pack(pady=5)
